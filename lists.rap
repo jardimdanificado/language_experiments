@@ -1,0 +1,13 @@
+macro tnew {
+    struct $1 {data, keys}
+    set($1, pack(0))
+    set(add($1, 2), pack(0))
+}
+
+macro tpush {
+    push(@$1.data, $2)
+    push(@$1.keys, $3)
+}
+
+tnew(a)
+tpush(a, 555, "nome")

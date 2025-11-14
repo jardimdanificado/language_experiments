@@ -7,6 +7,11 @@ macro List {
     set(mem, $1_keys, pack(0))
 }
 
+macro tfree {
+    free(@$1_data)
+    free(@$1_keys)
+}
+
 macro tpush {
     push(@$1_data, $2)
     push(@$1_keys, $3)
@@ -22,9 +27,13 @@ macro tvalue {
 
 macro tget {
     $1_tget_temp_index [0]
-    // need to fix
-    // set(mem, $1_tget_temp_index, find_str(@$1_keys, $2))
-    get(@$1, @$1_tget_temp_index)
+
+    $1_tget_loop [
+
+        set(mem, $1_tget_temp_index, add(@$1_tget_temp_index, 1))
+    ]
+    jif(not(eq(strcmp(get(@$1_keys, @$1_tget_temp_index), $2), 0)), $1_tget_loop)
+    get(@$1_data, @$1_tget_temp_index)
 }
 
 List(a)
@@ -33,3 +42,5 @@ tpush(a, 12345, "height")
 tpush(a, 712345, "id")
 
 println(tget(a, "height"))
+
+tfree(a)

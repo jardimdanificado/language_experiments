@@ -1,13 +1,35 @@
-macro tnew {
-    struct $1 {data, keys}
-    set($1, pack(0))
-    set(add($1, 2), pack(0))
+macro List {
+    $1 [
+        $1_data {0}
+        $1_keys {0}
+    ]
+    set(mem, $1_data, pack(0))
+    set(mem, $1_keys, pack(0))
 }
 
 macro tpush {
-    push(@$1.data, $2)
-    push(@$1.keys, $3)
+    push(@$1_data, $2)
+    push(@$1_keys, $3)
 }
 
-tnew(a)
-tpush(a, 555, "nome")
+macro tkey {
+    get(@$1_keys, $2)
+}
+
+macro tvalue {
+    get(@$1_data, $2)
+}
+
+macro tget {
+    $1_tget_temp_index [0]
+    // need to fix
+    // set(mem, $1_tget_temp_index, find_str(@$1_keys, $2))
+    get(@$1, @$1_tget_temp_index)
+}
+
+List(a)
+tpush(a, 155, "age")
+tpush(a, 12345, "height")
+tpush(a, 712345, "id")
+
+println(tget(a, "height"))
